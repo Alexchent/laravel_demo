@@ -17,8 +17,20 @@ class UsersController extends Controller
         return view('users.show', compact('user'));
     }
 
-    public function store()
+    public function store(Request $request)
     {
+        $this->validate($request,[
+            'name' => 'required|unique:users|max:50',
+            'email' => 'required|email|unique:users|max:255',
+            'password' => 'required|confirmed|min:6'
+        ]);
 
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+        session()->flash('success', '欢迎使用laravel-demo');
+        return redirect(route('users.show', [$user->id]));
     }
 }
