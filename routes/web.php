@@ -19,3 +19,5 @@ Route::get('/help', function () {
 Route::get('/about',[\App\Http\Controllers\StaticPagesController::class, 'about'])->name('about');
 
 Route::get('signup', 'UsersController@create')->name('signup');
+
+Route::resource('users','UsersController');
