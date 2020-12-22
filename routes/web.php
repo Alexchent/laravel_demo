@@ -26,4 +26,4 @@ Route::get('login', [\App\Http\Controllers\SessionController::class, 'create'])-
 Route::post('login', [\App\Http\Controllers\SessionController::class, 'store'])->name('login');
 Route::delete('logout', [\App\Http\Controllers\SessionController::class, 'destroy'])->name('logout');
 
-//Route::get('users/{user}/edit',[\App\Http\Controllers\UsersController::class,'edit'])->name('users.edit');
+Route::get('signup/confirm/{token}', [\App\Http\Controllers\UsersController::class, 'confirmEmail'])->name('confirm_email');

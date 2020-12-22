@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Mail;
 
 class UsersController extends Controller
 {
@@ -12,7 +13,7 @@ class UsersController extends Controller
     {
 
         $this->middleware('auth',[
-            'except' => ['show','create','store','index']
+            'except' => ['show','create','store','index', 'confirmEmail']
         ]);
 
         //只有未登陆的用户可以访问注册页面
@@ -53,9 +54,22 @@ class UsersController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-        Auth::login($user);
-        session()->flash('success', '欢迎使用laravel-demo');
-        return redirect(route('users.show', [$user->id]));
+        $this->sendConfirmEmail($user);
+        session()->flash('success', '验证邮件已发送到你的注册邮箱上，请注意查收。');
+        return redirect('/');
+    }
+
+    protected function sendConfirmEmail($user)
+    {
+        $view= 'emails.confirm';
+        $data = compact('user');
+        $from = '1023615292@qq.com';
+        $name = "alex";
+        $to = $user->email;
+        $subject = "感谢注册weibo！请确认激活";
+        Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
+            $message->from($from, $name)->to($to)->subject($subject);
+        });
     }
 
     public function edit(User $user)
@@ -86,5 +100,18 @@ class UsersController extends Controller
         $user->delete();
         session()->flash('success', '成功删除用户');
         return back();
+    }
+
+    public function confirmEmail($token)
+    {
+        $user = User::where('activation_token', $token)->firstOrFail();
+
+        $user->activated = true;
+        $user->activation_token = null;
+        $user->save();
+
+        Auth::login($user);
+        session()->flash('success', '恭喜你，激活成功！');
+        return redirect()->route('users.show', $user);
     }
 }
