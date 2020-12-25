@@ -52,21 +52,36 @@ class User extends Authenticatable
         });
     }
 
+    /**
+     * 个人动态
+     */
     public function statuses()
     {
         return $this->hasMany(Status::class);
     }
 
+    /**
+     * 我以及我关注的人的动态流
+     */
     public function feed()
     {
-        return $this->statuses()->orderBy('created_at', 'desc');
+        $user_ids = $this->followings->pluck('id')->toArray();
+        array_push($user_ids, $this->id);
+        return Status::whereIn('user_id', $user_ids)->with('user')
+            ->orderBy('created_at', 'desc');
     }
 
+    /*
+     * 我的粉丝
+     */
     public function followers()
     {
         return $this->belongsToMany(User::class, 'followers','user_id','follower_id');
     }
 
+    /*
+     * 我正在关注的
+     */
     public function followings()
     {
         return $this->belongsToMany(User::class,'followers','follower_id','user_id');
@@ -96,6 +111,11 @@ class User extends Authenticatable
         $this->followings()->detach($user_ids);
     }
 
+    /**
+     * 是否关注
+     * @param $user_id
+     * @return mixed
+     */
     public function isFollowing($user_id)
     {
         return $this->followings->contains($user_id);
