@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\NewStatus;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class Statistic
@@ -28,7 +29,8 @@ class Statistic
     public function handle($event)
     {
         if ($event instanceof NewStatus) {
-            Cache::increment('status_count');
+            if (rand(1,10) > 1) Cache::increment('status_count');
+            if (rand(1,10) == 1) Cache::put('status_count', Auth::user()->statuses()->count());
         }
     }
 }
