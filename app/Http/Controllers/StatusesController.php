@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewStatus;
 use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,10 +20,12 @@ class StatusesController extends Controller
             'content' => 'required|max:140'
         ]);
 
-        Auth::user()->statuses()->create([
+        $status = Auth::user()->statuses()->create([
             'content' => $request['content']
         ]);
+
         session()->flash('success', '发布成功');
+        event(new NewStatus($status));
         return redirect()->back();
     }
 
