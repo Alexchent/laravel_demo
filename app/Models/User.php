@@ -12,6 +12,21 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * 邮件通道通知的路由。
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return array|string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        // 只返回邮件地址...
+        return '1023615292@qq.com';
+
+        // 返回名字和邮件地址...
+//        return [$this->email_address => $this->name];
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
