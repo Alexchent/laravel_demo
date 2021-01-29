@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewStatus;
 use App\Models\Status;
+use App\Notifications\DemoSlack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,6 +26,7 @@ class StatusesController extends Controller
         ]);
 
         session()->flash('success', '发布成功');
+        $status->user->notify(new \App\Notifications\NewStatus($status->user));
         event(new NewStatus($status));
         return redirect()->back();
     }
@@ -33,6 +35,7 @@ class StatusesController extends Controller
     {
         $this->authorize('destroy', $status);
         $status->delete();
+        Auth::user()->notify(new DemoSlack());
         session()->flash('success', '删除成功！');
         return redirect()->back();
     }
