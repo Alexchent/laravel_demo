@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\ActiveAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Mail;
@@ -55,14 +56,15 @@ class UsersController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-        $this->sendConfirmEmail($user);
+//        $this->sendConfirmEmail($user);
+        $user->notify(new ActiveAccount($user));
         session()->flash('success', '验证邮件已发送到你的注册邮箱上，请注意查收。');
         return redirect('/');
     }
 
     protected function sendConfirmEmail($user)
     {
-        $view= 'emails.confirm';
+        $view = 'emails.confirm';
         $data = compact('user');
         $to = $user->email;
         $subject = "感谢注册weibo！请确认激活";

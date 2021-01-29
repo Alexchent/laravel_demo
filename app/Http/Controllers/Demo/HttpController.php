@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Demo;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Notifications\ActiveAccount;
+use App\Notifications\InvoicePaid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -35,5 +38,10 @@ class HttpController extends Controller
                 $request['name'] == 'Taylor' &&
                 $request['role'] == 'Developer';
         });
+    }
+
+    public function notify(User $user)
+    {
+        $user->forceFill(['name' => 'Alex', 'email' => '1023615292@qq.com'])->notify(new ActiveAccount());
     }
 }
