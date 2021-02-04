@@ -50,6 +50,7 @@ class HttpController extends Controller
         $pusherConfig = config('broadcasting.connections.pusher');
 
         $pusher = new Pusher($pusherConfig['key'], $pusherConfig['secret'], $pusherConfig['app_id'], ['cluster' => $pusherConfig['options']['cluster']]);
-        $pusher->trigger('my-channel', 'my-event',array('message' => '太阳神'));
+//        $pusher->trigger('my-channel', 'my-event',array('message' => '太阳神'));
+        $pusher->trigger('my-channel', 'my-event','太阳神');
     }
 }
