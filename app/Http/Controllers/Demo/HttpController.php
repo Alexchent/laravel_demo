@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Notifications\ActiveAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Pusher\Pusher;
 
 class HttpController extends Controller
 {
@@ -42,5 +43,13 @@ class HttpController extends Controller
     public function notify(User $user)
     {
         $user->notify(new ActiveAccount($user));
+    }
+
+    public function pushNotification()
+    {
+        $pusherConfig = config('broadcasting.connections.pusher');
+
+        $pusher = new Pusher($pusherConfig['key'], $pusherConfig['secret'], $pusherConfig['app_id'], ['cluster' => $pusherConfig['options']['cluster']]);
+        $pusher->trigger('my-channel', 'my-event',array('message' => '太阳神'));
     }
 }

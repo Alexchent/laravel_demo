@@ -50,3 +50,5 @@ Route::delete('/users/followers/{user}', 'FollowersController@destroy')->name('f
 Route::get('http_demo', [\App\Http\Controllers\Demo\HttpController::class,'demo']);
 Route::get('fake', [\App\Http\Controllers\Demo\HttpController::class,'fake']);
 Route::get('notify/{user}', [\App\Http\Controllers\Demo\HttpController::class,'notify']);
+
+Route::get('pushNotification', [\App\Http\Controllers\Demo\HttpController::class,'pushNotification']);
