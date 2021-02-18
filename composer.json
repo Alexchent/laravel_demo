@@ -16,7 +16,8 @@
         "laravel/framework": "^7.29",
         "laravel/tinker": "^2.5",
         "overtrue/laravel-lang": "~3.0",
-        "pusher/pusher-php-server": "^4.1"
+        "pusher/pusher-php-server": "^4.1",
+        "rebing/graphql-laravel": "^6.1"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
