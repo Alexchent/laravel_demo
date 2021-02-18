@@ -35,7 +35,6 @@ class StatusesController extends Controller
     {
         $this->authorize('destroy', $status);
         $status->delete();
-        Auth::user()->notify(new DemoSlack());
         session()->flash('success', '删除成功！');
         return redirect()->back();
     }
